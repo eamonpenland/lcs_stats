@@ -17,7 +17,7 @@ defmodule LcsStats.WebSocketReader do
     WebSockex.send_frame(client, {:text, message})
   end
 
-  def send_frame(pid, {:text, msg} = frame) do
+  def send_frame(pid, {:text, _msg} = frame) do
     WebSockex.send_frame(pid, frame)
   end
 
