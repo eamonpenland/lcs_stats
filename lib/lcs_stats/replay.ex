@@ -5,7 +5,7 @@ defmodule LcsStats.Replay do
     with {:ok, file} <- File.open(file_name, [:read]),
          do:
             read_lines(file, line_count, [])
-            |> LcsStats.EsWriter.persist
+            |> LcsStats.Publisher.publish(file_name)
   end
 
   def read_lines(file, line_count, acc) when line_count <= 1 do

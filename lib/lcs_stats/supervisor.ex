@@ -6,9 +6,13 @@ defmodule LcsStats.Supervisor do
   end
 
   def init([]) do
+    LcsStats.EsWriter.build_index
+    File.write("game2.json", "", [:write])
+
     children = [
       worker(LcsStats.WebSocketReader, [], [name: WebSocketReader]),
-      worker(LcsStats.FrameCounter, [], [])
+      worker(LcsStats.FrameCounter, [], []),
+      worker(LcsStats.Publisher, [], [])
     ]
 
     # supervise/2 is imported from Supervisor.Spec

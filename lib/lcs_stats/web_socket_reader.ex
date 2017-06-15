@@ -4,12 +4,10 @@ defmodule LcsStats.WebSocketReader do
   use WebSockex
   require Logger
 
-  @filename "game2.json"
+  @url "ws://livestats.proxy.lolesports.com/stats?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjoiMS4wIiwiamlkIjoiY2M3ZTI2M2QtZjkwMy00OWUyLWE4ZjgtZjAwZjI1N2Y2YWI3IiwiaWF0IjoxNDk3MjAzNzIyMjg1LCJleHAiOjE0OTc4MDg1MjIyODUsIm5iZiI6MTQ5NzIwMzcyMjI4NSwiY2lkIjoiYTkyNjQwZjI2ZGMzZTM1NGI0MDIwMjZhMjA3NWNiZjMiLCJzdWIiOnsiaXAiOiIyMDkuNi41NS43MCIsInVhIjoiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTJfNSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU4LjAuMzAyOS4xMTAgU2FmYXJpLzUzNy4zNiJ9LCJyZWYiOlsid2F0Y2guKi5sb2xlc3BvcnRzLmNvbSJdLCJzcnYiOlsibGl2ZXN0YXRzLXYxLjAiXX0.OTwFuh8cRcTemXybQRn3qMu4p0Pza4WCH8s7cJcUN-E"
 
   def start_link do
-    url = "ws://livestats.proxy.lolesports.com/stats?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjoiMS4wIiwiamlkIjoiY2M3ZTI2M2QtZjkwMy00OWUyLWE4ZjgtZjAwZjI1N2Y2YWI3IiwiaWF0IjoxNDk3MjAzNzIyMjg1LCJleHAiOjE0OTc4MDg1MjIyODUsIm5iZiI6MTQ5NzIwMzcyMjI4NSwiY2lkIjoiYTkyNjQwZjI2ZGMzZTM1NGI0MDIwMjZhMjA3NWNiZjMiLCJzdWIiOnsiaXAiOiIyMDkuNi41NS43MCIsInVhIjoiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTJfNSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU4LjAuMzAyOS4xMTAgU2FmYXJpLzUzNy4zNiJ9LCJyZWYiOlsid2F0Y2guKi5sb2xlc3BvcnRzLmNvbSJdLCJzcnYiOlsibGl2ZXN0YXRzLXYxLjAiXX0.OTwFuh8cRcTemXybQRn3qMu4p0Pza4WCH8s7cJcUN-E"
-    File.write(@filename, "", [:write])
-    WebSockex.start_link(url, __MODULE__, :state)
+    WebSockex.start_link(@url, __MODULE__, :state)
   end
 
   def echo(client, message) do
@@ -22,9 +20,7 @@ defmodule LcsStats.WebSocketReader do
   end
 
   def handle_frame({:text, msg}, :state) do
-    File.open(@filename, [:append], fn file ->
-      IO.binwrite(file, "#{msg}\n")
-    end )
+    LcsStats.Publisher.publish(msg, @url)
     {:ok, :state}
   end
 

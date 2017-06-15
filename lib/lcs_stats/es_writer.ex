@@ -1,9 +1,15 @@
 require IEx
 
 defmodule LcsStats.EsWriter do
+  use GenEvent
+
   @elastic_url "http://127.0.0.1:9200"
   @index_name "enriched_lcs_stats"
   @type_name "enriched_stat"
+
+  def handle_event({ :payload, payload, :frame_count, frame_count }, _state) do
+    persist(payload, frame_count)
+  end
 
   def build_index do
     Elastix.Index.delete(@elastic_url, @index_name)
@@ -16,25 +22,25 @@ defmodule LcsStats.EsWriter do
                         } })
   end
 
-  def persist(payloads) when is_list(payloads) do
-    Enum.each(fn(payload) ->
-      persist_payload(payload)
+  def persist(payloads, frame_count) when is_list(payloads) do
+    Enum.each(payloads, fn(payload) ->
+      persist(payload, frame_count)
     end)
   end
-  def persist(payload) do
-    parse(payload)
-    |> index
+  def persist(payload, frame_count) do
+    LcsStats.EsWriter.parse(payload)
+    |> index(frame_count)
   end
 
   def parse(raw_payload) do
-    Enum.into(raw_payloads, [], fn(raw_payload) -> Poison.decode!(raw_payload) end)
+    Poison.decode!(raw_payload)
   end
 
-  def index(payload) do
-    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload))
+  def index(payload, frame_count) do
+    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload, frame_count))
   end
 
-  def enriched_payload(payload) do
-    %{ created_at: (DateTime.utc_now() |> DateTime.to_unix(:milliseconds)), original_payload: payload}
+  def enriched_payload(payload, frame_count) do
+    %{ frame_count: frame_count, created_at: (DateTime.utc_now() |> DateTime.to_unix(:milliseconds)), original_payload: payload}
   end
 end
