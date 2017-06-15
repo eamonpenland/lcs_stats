@@ -16,18 +16,21 @@ defmodule LcsStats.EsWriter do
                         } })
   end
 
-  def persist_payloads(payloads) do
-    parse(payloads)
-    |> Enum.each(fn(payload) ->
-         persist_payload(payload)
-       end)
+  def persist(payloads) when is_list(payloads) do
+    Enum.each(fn(payload) ->
+      persist_payload(payload)
+    end)
+  end
+  def persist(payload) do
+    parse(payload)
+    |> index
   end
 
-  def parse(raw_payloads) do
+  def parse(raw_payload) do
     Enum.into(raw_payloads, [], fn(raw_payload) -> Poison.decode!(raw_payload) end)
   end
 
-  def persist_payload(payload) do
+  def index(payload) do
     {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload))
   end
 
