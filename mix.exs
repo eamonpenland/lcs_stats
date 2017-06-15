@@ -16,7 +16,7 @@ defmodule LcsStats.Mixfile do
   def application do
     [
       applications: [:logger, :websockex, :elastix],
-      # mod: {LcsStats, []}
+      mod: {LcsStats, []}
     ]
   end
 
