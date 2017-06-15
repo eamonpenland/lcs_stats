@@ -4,6 +4,6 @@ defmodule LcsStats do
   use Application
 
   def start(_type, _args) do
-    LcsStats.WebSocketReader.start_link
+    LcsStats.Supervisor.start_link
   end
 end
