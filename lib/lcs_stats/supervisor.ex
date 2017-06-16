@@ -11,7 +11,6 @@ defmodule LcsStats.Supervisor do
 
     children = [
       worker(LcsStats.WebSocketReader, [], [name: WebSocketReader]),
-      worker(LcsStats.FrameCounter, [], []),
       worker(LcsStats.Publisher, [], [])
     ]
 

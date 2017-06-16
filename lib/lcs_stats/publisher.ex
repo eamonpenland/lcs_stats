@@ -10,7 +10,6 @@ defmodule LcsStats.Publisher do
   end
 
   def publish(frame, source) do
-    frame_count = LcsStats.FrameCounter.get_and_increment(source)
-    GenEvent.notify(__MODULE__, { :payload, frame, :frame_count, frame_count })
+    GenEvent.notify(__MODULE__, { :payload, frame })
   end
 end
