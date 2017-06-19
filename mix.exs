@@ -15,9 +15,14 @@ defmodule LcsStats.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :websockex, :elastix],
-      mod: {LcsStats, []}
-    ]
+      applications: [
+        :logger,
+        :websockex,
+        :elastix,
+        :edeliver
+      ],
+    mod: {LcsStats, []}
+  ]
   end
 
   # Dependencies can be Hex packages:
