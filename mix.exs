@@ -31,9 +31,13 @@ defmodule LcsStats.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
+      # Core behavior
       {:websockex, "~> 0.2"},
       {:elastix, "~> 0.4"},
       {:poison, "~> 3.1"},
+      
+      # build and deploy
+      {:edeliver, ">= 1.4.2"},
       {:distillery, "~> 1.4"}
     ]
   end
