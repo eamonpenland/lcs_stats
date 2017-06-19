@@ -32,8 +32,9 @@ defmodule LcsStats.Mixfile do
   defp deps do
     [
       {:websockex, "~> 0.2"},
-      {:elastix, "> 0.0.0"},
-      {:poison, "> 0.0.0"}
+      {:elastix, "~> 0.4"},
+      {:poison, "~> 3.1"},
+      {:distillery, "~> 1.4"}
     ]
   end
 end
