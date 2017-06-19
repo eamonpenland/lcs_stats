@@ -5,7 +5,7 @@ defmodule LcsStats.FileWriter do
 
   @filename "game2.json"
 
-  def handle_event({ :payload, payload, :frame_count, _frame_count }, _state) do
+  def handle_event({ :payload, payload }, _state) do
     File.open(@filename, [:append], fn file ->
       IO.binwrite(file, "#{payload}\n")
     end )
