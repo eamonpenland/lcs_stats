@@ -1,4 +1,4 @@
-require IEx
+require Logger
 
 defmodule LcsStats.EsWriter do
   use GenEvent
@@ -37,7 +37,13 @@ defmodule LcsStats.EsWriter do
   end
 
   def index(payload) do
-    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload))
+    case Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload)) do
+      {:ok, %HTTPoison.Response{status_code: 201} } ->
+        {:ok, 201}
+      {:error, %HTTPoison.Error{id: nil, reason: :econnrefused}} ->
+        Logger.error "Error connecting to elasticsearch. Is elasticsearch running and accessible?"
+        {:ok, 503}
+    end
   end
 
   def enriched_payload(payload) do
