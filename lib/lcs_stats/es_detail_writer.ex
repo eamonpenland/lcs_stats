@@ -8,6 +8,17 @@ defmodule LcsStats.EsDetailWriter do
   @elastic_url "http://127.0.0.1:9200"
   @index_name "lcs_stats"
 
+  def build_index do
+    Elastix.Index.delete(@elastic_url, @index_name)
+    Elastix.Index.create(@elastic_url, @index_name, %{})
+    Elastix.Mapping.put(@elastic_url, @index_name, "_default_",
+                        %{ properties: %{
+                          time: %{ type: :integer },
+                          player_stats: %{ type: :object, dynamic: true },
+                          source_document: %{ type: :object, dynamic: false }
+                        } })
+  end
+
   def handle_event({ :payload, payload }, _state) do
     persist(payload)
   end
@@ -31,7 +42,7 @@ defmodule LcsStats.EsDetailWriter do
     Enricher.enrich(payload)
   end
 
-  def index(payload) do
-    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enrich(payload))
+  def index([game_id, payload]) do
+    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, game_id, payload)
   end
 end

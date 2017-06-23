@@ -5,13 +5,14 @@ defmodule LcsStats.EsDetailWriter.Enricher do
     payload
     |> actual_payload
     |> rebuild
+    |> (fn (doc) -> [game_id(payload), doc] end).()
   end
 
-  def rebuild(actual_payload) do
+  def rebuild(a_payload) do
     %{
-      time: Map.fetch!(actual_payload, "t"),
-      player_stats: Map.fetch!(actual_payload, "playerStats"),
-      source_document: actual_payload
+      time: Map.fetch!(a_payload, "t"),
+      player_stats: Map.fetch!(a_payload, "playerStats"),
+      source_document: a_payload
     }
   end
 

@@ -18,7 +18,6 @@ defmodule LcsStats.EsWriter do
                         %{ properties: %{
                           created_at: %{ type: :date },
                           original_payload: %{ type: :object, dynamic: false }
-
                         } })
   end
 
