@@ -3,9 +3,10 @@ require IEx
 defmodule LcsStats.EsDetailWriter do
   use GenEvent
 
+  alias LcsStats.EsDetailWriter.Enricher
+
   @elastic_url "http://127.0.0.1:9200"
-  @index_name "enriched_lcs_stats"
-  @type_name "enriched_stat"
+  @index_name "lcs_stats"
 
   def handle_event({ :payload, payload }, _state) do
     persist(payload)
@@ -27,8 +28,7 @@ defmodule LcsStats.EsDetailWriter do
   end
 
   def enrich(payload) do
-    IEx.pry
-    %{ original_payload: payload }
+    Enricher.enrich(payload)
   end
 
   def index(payload) do

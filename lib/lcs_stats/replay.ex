@@ -5,6 +5,7 @@ defmodule LcsStats.Replay do
     with {:ok, file} <- File.open(file_name, [:read]),
          do:
             read_lines(file, line_count, [])
+            |> Enum.drop(1)
             |> LcsStats.Publisher.publish(file_name)
   end
 

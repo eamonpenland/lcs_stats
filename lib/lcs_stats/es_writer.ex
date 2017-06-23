@@ -4,8 +4,8 @@ defmodule LcsStats.EsWriter do
   use GenEvent
 
   @elastic_url "http://127.0.0.1:9200"
-  @index_name "enriched_lcs_stats"
-  @type_name "enriched_stat"
+  @index_name "raw_lcs_stats"
+  @type_name "stat"
 
   def handle_event({ :payload, payload }, _state) do
     persist(payload)
