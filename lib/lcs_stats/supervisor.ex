@@ -6,9 +6,6 @@ defmodule LcsStats.Supervisor do
   end
 
   def init([]) do
-    LcsStats.EsWriter.build_index
-    File.write("game2.json", "", [:write])
-
     children = [
       worker(LcsStats.WebSocketReader, [], [name: WebSocketReader]),
       worker(LcsStats.Publisher, [], [])

@@ -11,16 +11,6 @@ defmodule LcsStats.EsWriter do
     persist(payload)
   end
 
-  def build_index do
-    Elastix.Index.delete(@elastic_url, @index_name)
-    Elastix.Index.create(@elastic_url, @index_name, %{})
-    Elastix.Mapping.put(@elastic_url, @index_name, @type_name,
-                        %{ properties: %{
-                          created_at: %{ type: :date },
-                          original_payload: %{ type: :object, dynamic: false }
-                        } })
-  end
-
   def persist(payloads) when is_list(payloads) do
     Enum.each(payloads, fn(payload) ->
       persist(payload)

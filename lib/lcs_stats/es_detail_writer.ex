@@ -9,18 +9,6 @@ defmodule LcsStats.EsDetailWriter do
   @index_name "lcs_stats"
   @type_name "lcs_stat"
 
-  def build_index do
-    Elastix.Index.delete(@elastic_url, @index_name)
-    Elastix.Index.create(@elastic_url, @index_name, %{})
-    Elastix.Mapping.put(@elastic_url, @index_name, "_default_",
-                        %{ properties: %{
-                          game_id: %{ type: :integer },
-                          time: %{ type: :integer },
-                          player_stats: %{ type: :object, dynamic: true },
-                          source_document: %{ type: :object, dynamic: false }
-                        } })
-  end
-
   def handle_event({ :payload, payload }, _state) do
     persist(payload)
   end
