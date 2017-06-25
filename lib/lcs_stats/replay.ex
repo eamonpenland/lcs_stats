@@ -6,7 +6,7 @@ defmodule LcsStats.Replay do
          do:
             read_lines(file, line_count, [])
             |> Enum.drop(1)
-            |> LcsStats.Publisher.publish(file_name)
+            |> LcsStats.Publisher.publish
   end
 
   def read_lines(file, line_count, acc) when line_count <= 1 do

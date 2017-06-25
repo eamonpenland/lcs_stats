@@ -1,14 +1,8 @@
-require IEx
-
 defmodule LcsStats.EsDetailWriter.Enricher do
   def enrich(payload) do
     payload
     |> actual_payload
     |> rebuild(payload)
-  end
-
-  defp add_game_id(payload) do
-    [payload, %{ document | game_id: game_id(payload) }]
   end
 
   defp rebuild(actual_payload, original_payload) do

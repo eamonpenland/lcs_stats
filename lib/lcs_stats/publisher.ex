@@ -10,7 +10,7 @@ defmodule LcsStats.Publisher do
     {:ok, pid}
   end
 
-  def publish(frame, source) do
+  def publish(frame) do
     GenEvent.notify(__MODULE__, { :payload, frame })
   end
 end

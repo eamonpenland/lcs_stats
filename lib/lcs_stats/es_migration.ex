@@ -2,8 +2,8 @@ defmodule LcsStats.EsMigration do
   @elastic_url "http://127.0.0.1:9200"
 
   def run do
-    {:ok, %HTTPoison.Response{status_code: 200}} = build_lcs_stats_index
-    {:ok, %HTTPoison.Response{status_code: 200}} = build_raw_lcs_stats_index
+    {:ok, %HTTPoison.Response{status_code: 200}} = build_lcs_stats_index()
+    {:ok, %HTTPoison.Response{status_code: 200}} = build_raw_lcs_stats_index()
   end
 
   def build_lcs_stats_index do

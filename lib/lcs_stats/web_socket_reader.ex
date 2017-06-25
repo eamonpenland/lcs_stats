@@ -20,7 +20,7 @@ defmodule LcsStats.WebSocketReader do
   end
 
   def handle_frame({:text, msg}, :state) do
-    LcsStats.Publisher.publish(msg, @url)
+    LcsStats.Publisher.publish(msg)
     {:ok, :state}
   end
 

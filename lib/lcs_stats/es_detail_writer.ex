@@ -1,5 +1,3 @@
-require IEx
-
 defmodule LcsStats.EsDetailWriter do
   use GenEvent
 
