@@ -4,10 +4,8 @@ defmodule LcsStats.WebSocketReader do
   use WebSockex
   require Logger
 
-  @url "ws://livestats.proxy.lolesports.com/stats?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjoiMS4wIiwiamlkIjoiOWMyM2NjYWUtOGJhMy00NDI2LTk5NTgtMmZkNzgyOGVlMDVhIiwiaWF0IjoxNDk4MjYxMjcxMDMyLCJleHAiOjE0OTg4NjYwNzEwMzIsIm5iZiI6MTQ5ODI2MTI3MTAzMiwiY2lkIjoiYTkyNjQwZjI2ZGMzZTM1NGI0MDIwMjZhMjA3NWNiZjMiLCJzdWIiOnsiaXAiOiIxMDguNDkuMTM5LjEyMSIsInVhIjoiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTJfNSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU4LjAuMzAyOS4xMTAgU2FmYXJpLzUzNy4zNiJ9LCJyZWYiOlsid2F0Y2guKi5sb2xlc3BvcnRzLmNvbSJdLCJzcnYiOlsibGl2ZXN0YXRzLXYxLjAiXX0.0S3crVALjbrwDk7u7HYI27ygxWgqZ5QSbNhEIbtX-0A"
-
-  def start_link do
-    WebSockex.start_link(@url, __MODULE__, :state)
+  def start_link(url) do
+    WebSockex.start_link(url, __MODULE__, :state)
   end
 
   def echo(client, message) do
