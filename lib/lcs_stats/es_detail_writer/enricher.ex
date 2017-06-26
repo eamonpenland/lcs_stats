@@ -8,7 +8,7 @@ defmodule LcsStats.EsDetailWriter.Enricher do
   defp rebuild(actual_payload, original_payload) do
     %{ 
       game_id: game_id(original_payload),
-      time: Map.fetch!(actual_payload, "t"),
+      time: Map.get(actual_payload, "t"),
       player_stats: Map.get(actual_payload, "playerStats"),
       source_document: actual_payload
     }
