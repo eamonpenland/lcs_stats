@@ -1,14 +1,14 @@
 [Unit]
 Description=Lcs Stats
 After=network.target
-Requires=network.target
+Requires=network.target elasticsearch.service
 
 [Service]
 Type=forking
 WorkingDirectory=/opt/elixir/lcs_stats
 User=root
 Group=root
-Restart=on-failure
+Restart=always
 RestartSec=5
 Environment=MIX_ENV=prod
 ExecStart=/opt/elixir/lcs_stats/bin/lcs_stats start
