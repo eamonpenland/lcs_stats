@@ -1,0 +1,18 @@
+[Unit]
+Description=Lcs Stats
+After=network.target
+Requires=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/elixir/lcs_stats
+User=root
+Group=root
+Restart=on-failure
+RestartSec=5
+Environment=MIX_ENV=prod
+ExecStart=/opt/elixir/lcs_stats/bin/lcs_stats start
+ExecStop=/opt/elixir/lcs_stats/bin/lcs_stats stop
+
+[Install]
+WantedBy=multi-user.target
