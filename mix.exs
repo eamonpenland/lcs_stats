@@ -16,6 +16,7 @@ defmodule LcsStats.Mixfile do
   def application do
     [
       applications: [
+        :gen_stage,
         :logger,
         :websockex,
         :elastix,
@@ -37,6 +38,7 @@ defmodule LcsStats.Mixfile do
   defp deps do
     [
       # Core behavior
+      {:gen_stage, "~> 0.11"},
       {:websockex, "~> 0.2"},
       {:elastix, "~> 0.4"},
       {:poison, "~> 3.1"},
