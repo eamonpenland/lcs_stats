@@ -1,16 +1,24 @@
-require IEx
-
 defmodule LcsStats.Publisher do
+  use GenStage
 
   def start_link do
-    {:ok, pid} = GenEvent.start_link([name: __MODULE__])
-    # GenEvent.add_handler(__MODULE__, LcsStats.FileWriter, [])
-    GenEvent.add_handler(__MODULE__, LcsStats.EsWriter, [])
-    GenEvent.add_handler(__MODULE__, LcsStats.EsDetailWriter, [])
-    {:ok, pid}
+    GenStage.start_link(__MODULE__, :ok, [name: LcsStats.Publisher])
   end
 
   def publish(frame) do
-    GenEvent.notify(__MODULE__, { :payload, frame })
+    GenStage.call(__MODULE__, {:publish, frame})
   end
+
+  def init(_) do
+    {:producer, :ok}
+  end
+
+  def handle_call({:publish, frame}, _from, state) do
+    {:reply, :ok, [frame], state}
+  end
+
+  def handle_demand(_demand, state) do
+    {:noreply, [], state} # We don't care about the demand
+  end
+
 end

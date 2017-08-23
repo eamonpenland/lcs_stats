@@ -1,14 +1,23 @@
 require Logger
 
 defmodule LcsStats.EsWriter do
-  use GenEvent
+  use GenStage
 
   @elastic_url "http://127.0.0.1:9200"
   @index_name "raw_lcs_stats"
   @type_name "stat"
 
-  def handle_event({ :payload, payload }, _state) do
-    persist(payload)
+  def start_link() do
+    GenStage.start_link(__MODULE__, :ok)
+  end
+
+  def init(_) do
+    {:consumer, :ok, subscribe_to: [LcsStats.Publisher]}
+  end
+
+  def handle_events(frames, _from, state) do
+    persist(frames)
+    {:noreply, [], state}
   end
 
   def persist(payloads) when is_list(payloads) do

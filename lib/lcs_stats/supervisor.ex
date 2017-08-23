@@ -17,8 +17,18 @@ defmodule LcsStats.Supervisor do
   end
 
   def init([]) do
+		# children = []
+    # LcsStats.EsMigration.run
+    # {pub_stat, pub_id} = LcsStats.Publisher.start_link
+    # {writ_stat, writ_id} = LcsStats.EsDetailWriter.start_link
+		# LcsStats.Replay.replay('game1.json', 20)
+
     children = [
       worker(LcsStats.Publisher, [], [])
+      worker(LcsStats.EsWriter, [], [])
+      worker(LcsStats.EsWriter, [], [])
+      worker(LcsStats.EsDetailWriter, [], [])
+      worker(LcsStats.EsDetailWriter, [], [])
     ]
     children = Enum.into(websocket_urls(), children, fn (url) ->
       worker(LcsStats.WebSocketReader, [url], [id: url])
