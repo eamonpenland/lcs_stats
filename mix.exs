@@ -3,8 +3,8 @@ defmodule LcsStats.Mixfile do
 
   def project do
     [app: :lcs_stats,
-     version: "0.2.2",
-     elixir: "~> 1.3",
+     version: "0.3.0",
+     elixir: "~> 1.5",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
