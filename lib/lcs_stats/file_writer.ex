@@ -11,9 +11,9 @@ defmodule LcsStats.FileWriter do
     {:consumer, :ok, subscribe_to: [LcsStats.Publisher]}
   end
 
-  def handle_event(frames, state) do
+  def handle_events(frames, _from, state) do
     File.open(@filename, [:append], fn file ->
-      IO.binwrite(file, "#{payload}\n")
+      IO.binwrite(file, "#{frames}\n")
     end )
     {:noreply, [], state}
   end
