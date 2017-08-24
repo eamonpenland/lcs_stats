@@ -24,11 +24,11 @@ defmodule LcsStats.Supervisor do
 		# LcsStats.Replay.replay('game1.json', 20)
 
     children = [
-      worker(LcsStats.Publisher, [], [])
-      worker(LcsStats.EsWriter, [], [])
-      worker(LcsStats.EsWriter, [], [])
-      worker(LcsStats.EsDetailWriter, [], [])
-      worker(LcsStats.EsDetailWriter, [], [])
+      worker(LcsStats.Publisher, [], []),
+      worker(LcsStats.EsWriter, [], []),
+      worker(LcsStats.EsWriter, [], []),
+      worker(LcsStats.EsDetailWriter, [], []),
+      worker(LcsStats.EsDetailWriter, [], []),
     ]
     children = Enum.into(websocket_urls(), children, fn (url) ->
       worker(LcsStats.WebSocketReader, [url], [id: url])
