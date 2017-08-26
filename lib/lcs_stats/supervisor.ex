@@ -1,8 +1,10 @@
+require IEx
+
 defmodule LcsStats.Supervisor do
   use Supervisor
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [])
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def websocket_urls do
@@ -24,17 +26,15 @@ defmodule LcsStats.Supervisor do
 		# LcsStats.Replay.replay('game1.json', 20)
 
     children = [
-      worker(LcsStats.Publisher, [], []),
-      worker(LcsStats.EsWriter, [], []),
-      worker(LcsStats.EsWriter, [], []),
-      worker(LcsStats.EsDetailWriter, [], []),
-      worker(LcsStats.EsDetailWriter, [], []),
+      LcsStats.Publisher,
+      LcsStats.EsWriter,
+      LcsStats.EsDetailWriter,
     ]
     children = Enum.into(websocket_urls(), children, fn (url) ->
-      worker(LcsStats.WebSocketReader, [url], [id: url])
+      Supervisor.child_spec({LcsStats.WebSocketReader, url}, id: url)
     end)
 
     # supervise/2 is imported from Supervisor.Spec
-    supervise(children, strategy: :one_for_one)
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end

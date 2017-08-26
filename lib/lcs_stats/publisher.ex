@@ -1,7 +1,7 @@
 defmodule LcsStats.Publisher do
   use GenStage
 
-  def start_link do
+  def start_link(_) do
     GenStage.start_link(__MODULE__, :ok, [name: LcsStats.Publisher])
   end
 

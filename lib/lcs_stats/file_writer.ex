@@ -3,7 +3,7 @@ defmodule LcsStats.FileWriter do
 
   @filename "game2.json"
 
-  def start_link() do
+  def start_link(_) do
     GenStage.start_link(__MODULE__, :ok)
   end
 
@@ -11,7 +11,7 @@ defmodule LcsStats.FileWriter do
     {:consumer, :ok, subscribe_to: [LcsStats.Publisher]}
   end
 
-  def handle_events(frames, _from, state) do
+  def handle_event(frames, state) do
     File.open(@filename, [:append], fn file ->
       IO.binwrite(file, "#{frames}\n")
     end )

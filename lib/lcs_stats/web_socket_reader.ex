@@ -30,4 +30,13 @@ defmodule LcsStats.WebSocketReader do
     Logger.info("Other disconnect: #{inspect disconnect_map}")
     super(disconnect_map, state)
   end
+
+  def child_spec(opts) do
+    %{
+      start: {__MODULE__, :start_link, [opts]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
+  end
 end

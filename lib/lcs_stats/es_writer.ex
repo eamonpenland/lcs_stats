@@ -7,7 +7,7 @@ defmodule LcsStats.EsWriter do
   @index_name "raw_lcs_stats"
   @type_name "stat"
 
-  def start_link() do
+  def start_link(_) do
     GenStage.start_link(__MODULE__, :ok)
   end
 
