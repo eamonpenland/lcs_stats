@@ -21,9 +21,7 @@ defmodule LcsStats.EsWriter do
   end
 
   def persist(payloads) when is_list(payloads) do
-    Enum.each(payloads, fn(payload) ->
-      persist(payload)
-    end)
+    for payload <- payloads, do: persist(payload)
   end
   def persist(payload) do
     LcsStats.EsWriter.parse(payload)
@@ -35,13 +33,18 @@ defmodule LcsStats.EsWriter do
   end
 
   def index(payload) do
-    case Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload)) do
-      {:ok, %HTTPoison.Response{status_code: 201} } ->
-        {:ok, 201}
-      {:error, %HTTPoison.Error{id: nil, reason: :econnrefused}} ->
-        Logger.error "Error connecting to elasticsearch. Is elasticsearch running and accessible?"
-        {:ok, 503}
-    end
+    Elastix.Document.index_new(@elastic_url, @index_name, @type_name, enriched_payload(payload))
+    |> handle_index_result
+  end
+
+  # I'm rule of 3-ing handle_index_result/1 method here and in es_detail_writer.ex
+  def handle_index_result({:ok, %HTTPoison.Response{status_code: 201}}) do
+    {:ok, 201}
+  end
+
+  def handle_index_result({:error, %HTTPoison.Error{id: nil, reason: :econnrefused}}) do
+    Logger.error "Error connecting to elasticsearch. Is elasticsearch running and accessible?"
+    {:ok, 503}
   end
 
   def enriched_payload(payload) do

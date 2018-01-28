@@ -34,9 +34,9 @@ defmodule LcsStats.Supervisor do
       LcsStats.EsWriter,
       LcsStats.EsDetailWriter,
     ]
-    children = Enum.into(websocket_urls(), children, fn (url) ->
+    children = for url <- websocket_urls(), into: children do
       Supervisor.child_spec({LcsStats.WebSocketReader, url}, id: url)
-    end)
+    end
 
     # supervise/2 is imported from Supervisor.Spec
     Supervisor.init(children, strategy: :one_for_one)

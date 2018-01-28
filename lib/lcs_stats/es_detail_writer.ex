@@ -1,3 +1,5 @@
+require Logger
+
 defmodule LcsStats.EsDetailWriter do
   use GenStage
 
@@ -21,9 +23,7 @@ defmodule LcsStats.EsDetailWriter do
   end
 
   def persist(payloads) when is_list(payloads) do
-    Enum.each(payloads, fn(payload) ->
-      persist(payload)
-    end)
+    for payload <- payloads, do: persist(payload)
   end
   def persist(payload) do
     LcsStats.EsWriter.parse(payload)
@@ -40,6 +40,17 @@ defmodule LcsStats.EsDetailWriter do
   end
 
   def index(payload) do
-    {:ok, %HTTPoison.Response{status_code: 201} } = Elastix.Document.index_new(@elastic_url, @index_name, @type_name, payload)
+    Elastix.Document.index_new(@elastic_url, @index_name, @type_name, payload)
+    |> handle_index_result
+  end
+
+  # I'm rule of 3-ing handle_index_result/1 here and in es_writer.ex
+  def handle_index_result({:ok, %HTTPoison.Response{status_code: 201}}) do
+    {:ok, 201}
+  end
+
+  def handle_index_result({:error, %HTTPoison.Error{id: nil, reason: :econnrefused}}) do
+    Logger.error "Error connecting to elasticsearch. Is elasticsearch running and accessible?"
+    {:ok, 503}
   end
 end
